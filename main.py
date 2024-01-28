@@ -6,7 +6,6 @@ from getpass import getpass
 import platform
 from pathlib import Path
 
-
 class User:
     def __init__(self, name, tax, hourly_wage, password):
         self.name = name
@@ -18,7 +17,6 @@ class User:
     def add_monthly_pay(self, month, pay):
         self.monthly_pay[month] = pay
 
-
 def get_settings_file_path():
     documents_dir = Path.home() / "Documents"
     settings_dir = documents_dir / "Pay Calculator Settings"
@@ -26,12 +24,10 @@ def get_settings_file_path():
     settings_file = settings_dir / "settings.pkl"
     return str(settings_file)
 
-
 def save_users(users):
     settings_file = get_settings_file_path()
     with open(settings_file, 'wb') as f:
         pickle.dump(users, f)
-
 
 def load_users():
     settings_file = get_settings_file_path()
@@ -41,7 +37,6 @@ def load_users():
     else:
         return {}
 
-
 def delete_user(users, username):
     if username in users:
         print("\nDeleting settings...")
@@ -50,31 +45,22 @@ def delete_user(users, username):
         save_users(users)
         print("Settings deleted.")
 
-
 def expected_pay(user, hours_worked):
     return user.hourly_wage * hours_worked * (1 - user.tax)
 
-
 def compare_pay(user, actual_pay, hours_worked):
     expected = expected_pay(user, hours_worked)
-    difference = Decimal(actual_pay - expected).quantize(Decimal('.01'),
-                                                         rounding=ROUND_DOWN)  # Round down to 2 decimal places
-
+    difference = Decimal(actual_pay - expected).quantize(Decimal('.01'), rounding=ROUND_DOWN)  
     press_enter()
     clear_screen()
-
     print("Difference Breakdown:")
     print(f"\nExpected pay: {user.hourly_wage} * {hours_worked} hours * (1 - {user.tax})")
     print(f"Expected pay: {user.hourly_wage} * {hours_worked} hours * {1 - user.tax}")
     print(f"Expected pay: {user.hourly_wage * hours_worked * (1 - user.tax)}")
-
     print(f"\nActual pay: {actual_pay}")
-
     print(f"\nDifference: {expected} - {actual_pay}")
     print(f"Difference: {difference}")
-
     press_enter()
-
 
 def adjust_settings(user):
     print("\nEnter the new values. Leave blank to keep the current value.")
@@ -103,16 +89,14 @@ def adjust_settings(user):
             break
         except ValueError as e:
             print(f"Invalid input: {e}")
-
     return user
-
 
 def settings_area(users, username):
     user = users.get(username)
     if user:
         clear_screen()
         print(f"\nName: {user.name}")
-        print(f"Tax: {user.tax * 100}%")  # Convert decimal to percentage for display
+        print(f"Tax: {user.tax * 100}%") 
         print(f"Hourly Wage: {user.hourly_wage}")
         print(f"Monthly pays: {user.monthly_pay}")
         action = input(
@@ -127,7 +111,6 @@ def settings_area(users, username):
     else:
         print("No settings found.")
     return user
-
 
 def actual_pay_area(users, username):
     user = users.get(username)
@@ -155,54 +138,53 @@ def actual_pay_area(users, username):
         compare_pay(user, actual_pay, hours_worked)
         save_users(users)
 
-
 def login(users):
-    while True:
-        clear_screen()
-        print("\n1. Login")
-        print("2. Register")
-        print("3. Exit")
-        option = input("\nSelect an option (1-3): ")
-        if option == '1':
-            username = input("\nEnter your username: ")
-            password = getpass("Enter your password: ")
-            if username in users and users[username].password == password:
-                return username
-            else:
-                print("Invalid username or password.")
-        elif option == '2':
             while True:
-                username = input("\nEnter a new username: ")
-                if username in users:
-                    print("Username already taken.")
+                clear_screen()
+                print("\n1. Login")
+                print("2. Register")
+                print("3. Exit")
+                option = input("\nSelect an option (1-3): ")
+                if option == '1':
+                    username = input("\nEnter your username: ")
+                    password = getpass("Enter your password: ")
+                    if username in users and users[username].password == password:
+                        return username
+                    else:
+                        print("Invalid username or password.")
+                elif option == '2':
+                    while True:
+                        username = input("\nEnter a new username: ")
+                        if username in users:
+                            print("Username already taken.")
+                        else:
+                            break
+
+                    password = getpass("Enter a new password: ")
+                    name = input("Enter your name: ")
+
+                    while True:
+                        try:
+                            tax = float(input("Enter your tax rate (as a percentage): "))
+                            break
+                        except ValueError:
+                            print("Invalid input. Please enter a valid number.")
+
+                    while True:
+                        try:
+                            hourly_wage = float(input("Enter your hourly wage: "))
+                            break
+                        except ValueError:
+                            print("Invalid input. Please enter a valid number.")
+
+                    user = User(name, tax, hourly_wage, password)
+                    users[username] = user
+                    save_users(users)
+                    return username
+                elif option == '3':
+                    return None
                 else:
-                    break
-
-            password = getpass("Enter a new password: ")
-            name = input("Enter your name: ")
-
-            while True:
-                try:
-                    tax = float(input("Enter your tax rate (as a percentage): "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
-
-            while True:
-                try:
-                    hourly_wage = float(input("Enter your hourly wage: "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
-
-            user = User(name, tax, hourly_wage, password)
-            users[username] = user
-            save_users(users)
-            return username
-        elif option == '3':
-            return None
-        else:
-            print("Invalid option. Please enter a number between 1 and 3.")
+                    print("Invalid option. Please enter a number between 1 and 3.")
 
 
 def clear_screen():
@@ -217,7 +199,6 @@ def clear_screen():
     print(
         "\n\033[2mDisclaimer: This script is for educational purposes only. The calculations provided are approximate and may not reflect actual pay amounts. Your payslip may differ from the results obtained using this script.\033[0m")
     print("------------------------------\n")
-
 
 def main():
     users = load_users()
@@ -241,18 +222,15 @@ def main():
                 print("Invalid option. Please enter a number between 1 and 3.")
             transition_effect()
 
-
 def transition_effect():
     if platform.system() == 'Windows':
         time.sleep(0.5)
     else:
         os.system('sleep 0.5')
 
-
 def press_enter():
     input("\nPress Enter to continue...")
     clear_screen()
-
 
 if __name__ == "__main__":
     main()
