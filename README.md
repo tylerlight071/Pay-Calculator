@@ -18,7 +18,7 @@ Pay Calculator is loaded with features to make your financial life a breeze:
 2. Double-click the executable to run it, or launch it from your terminal or command prompt.
 
 For **Windows**, use `PayCalculator.exe`.  
-For **macOS** and **Linux**, use `./PayCalculator`.
+For **Linux**, use `./PayCalculator`.
 
 **Dive into Pay Management:**
 
@@ -30,7 +30,6 @@ For **macOS** and **Linux**, use `./PayCalculator`.
 Your settings are tucked away safely in the following locations:
 
 - Windows: Documents/Pay Calculator Settings
-- macOS: Documents/Pay Calculator Settings
 - Linux: Documents/Pay Calculator Settings
 
 Look out for the settings file named `settings.pkl` in the specified directory. Just make sure you have write permissions for that folder!
